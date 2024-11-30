@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semantic Search</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            text-align: center;
+            padding: 2rem;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 2rem;
+        }
+        .search-box {
+            padding: 0.75rem 1rem;
+            font-size: 1.1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            width: 300px;
+            max-width: 90%;
+            transition: border-color 0.2s ease;
+        }
+        .search-box:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .thread-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 5px;
+            padding: 20px;
+        }
+        #title {
+            margin-bottom:0px;
+        }
+        #subtitle {
+            margin-top:0px;
+            color:gray;
+        }
+    </style>
+  <script type="module" crossorigin src="./assets/index.90ff30ef.js"></script>
+</head>
+<body>
+    <script src="./src/tweet-component.js"></script>
+
+    <div class="container">
+        <h1 id="title">(loading...)</h1>
+        <p id="subtitle"></p>
+        <textarea id="search" type="text" class="search-box" placeholder="Semantic search..." autofocus></textarea>
+    </div>
+    <div id="clusterThreads">
+
+    </div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.4/pako.min.js"></script>
+    
+</body>
+</html>
