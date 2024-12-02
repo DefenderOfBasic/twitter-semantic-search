@@ -51,7 +51,7 @@ const d=function(){const e=document.createElement("link").relList;if(e&&e.suppor
             </style>
             
                 <div class="tweet">
-                    <a href="${u}">
+                    <a href="${u}" target="_blank">
                     <div class="tweet-header">
                         <img class="avatar" src="${e}" alt="${r}'s avatar">
                         <div class="user-info">
