@@ -1,0 +1,1 @@
+import"./tweet-component.088c1db2.js";async function o(){const s=await(await fetch("./users.json")).json(),n=Object.keys(s);let e="";for(let t of n)e+=`<li><a href="./search.html?username=${t}">${t}</a></li>`;document.querySelector("#user-list").innerHTML=e}o();

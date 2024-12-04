@@ -1,0 +1,20 @@
+{
+    "visakanv": {
+        "query_url": "https://visakanv-semantic-search.defenderofbasic.workers.dev/query",
+        "subtitle": "1,639,243 words - 33,752 threads",
+        "avatar": "https://pbs.twimg.com/profile_images/1837038049366265856/OXT-p-LD.jpg",
+        "name": "Visakan Veerasamy"
+    },
+    "nosilverv": {
+        "query_url": "https://nosilverv-semantic-search.defenderofbasic.workers.dev/query",
+        "subtitle": "205,464 words - 28,778 threads",
+        "avatar": "https://pbs.twimg.com/profile_images/1800173618652979201/2cDLkS53_400x400.jpg", 
+        "name": "Guy"
+    }, 
+    "defenderofbasic": {
+        "query_url": "https://semantic-search.defenderofbasic.workers.dev/query",
+        "name": "Defender",
+        "subtitle": "216,047 words - 3,741 threads",
+        "avatar": "https://pbs.twimg.com/profile_images/1784246094085443584/2qFrK_bU_400x400.jpg"
+    }
+}

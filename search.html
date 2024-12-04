@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semantic Search</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            text-align: center;
+            padding: 2rem;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 2rem;
+        }
+        .search-box {
+            padding: 0.75rem 1rem;
+            font-size: 1.1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            width: 300px;
+            max-width: 90%;
+            transition: border-color 0.2s ease;
+        }
+        .search-box:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .thread-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 5px;
+            padding: 20px;
+        }
+        #title {
+            margin-bottom:0px;
+        }
+        .subtitle {
+            margin-top:0px;
+            color:gray;
+        }
+    </style>
+  <script type="module" crossorigin src="./assets/search.3453b00e.js"></script>
+  <link rel="modulepreload" href="./assets/tweet-component.088c1db2.js">
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+
+    <div class="container">
+        <h1 id="title">(loading...)</h1>
+        <p class="subtitle"></p>
+        <textarea id="search" type="text" class="search-box" placeholder="Type a query & hit enter" autofocus></textarea>
+        <div id="instructions" style="color:Gray; max-width: 400px; text-align: left;">
+            <p>
+                This will search for text similarity between what you type and all of this user's tweet threads.
+            </p>
+            <p>
+                Whatever you type, the system will find threads that are similar in meaning, tone, emotional sentiment, etc. 
+            </p>
+            <p>
+                For example, if you're looking for tweets about gender discourse:
+                <ul>
+                    <li>❌ "show me tweets about gender discourse"</li>
+                    <li>✅ "our culture has lots of problems in the relationship between men & woman, something that people often miss is..."</li>
+                </ul>
+            </p>
+            <p>
+                The best use case is when you're searching for a tweet you know exists, but you can't remember the exact wording, you can just paraphrase it and it will find it. The more detail the better.
+            </p>
+            <p>
+                You can also paste in a short essay to find tweet threads similar to it.
+            </p>
+            <p style="font-style: italic;">
+                Note: you can add <code>sortByDate</code> query param to sort results. They are sorted by similarity by default.
+            </p>
+        </div>
+
+    </div>
+    <div id="clusterThreads">
+
+    </div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.4/pako.min.js"></script>
+    
+</body>
+</html>
