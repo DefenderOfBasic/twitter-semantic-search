@@ -161,8 +161,10 @@
                             .from('tweet_media')
                             .select('*')
                             .eq('tweet_id', match.tweet_id)
-                        const imageUrl = mediaResult.data[0].media_url
-                        console.log(mediaResult)
+                        let imageUrl = ''
+                        if (mediaResult.data && mediaResult.data.length != 0) {
+                            imageUrl = mediaResult.data[0].media_url
+                        }
 
                         const accountInfo = accountIdMap[account_id]
 
