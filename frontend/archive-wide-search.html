@@ -88,6 +88,7 @@
             const urlParams = new URLSearchParams(window.location.search);
             const username = urlParams.get('username');
             const sortByDate = urlParams.get('sortByDate');
+            const maxK = Number(urlParams.get('max') || 5)
          
             
             // const QUERY_URL = 'http://37.27.10.242:8080/search/text'
@@ -112,7 +113,7 @@
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({"text": searchTerm, "top_k": 5})
+                        body: JSON.stringify({"text": searchTerm, "top_k": maxK })
                     })
                     let result = await response.json()
                     console.log(result)
