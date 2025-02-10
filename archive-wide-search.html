@@ -50,7 +50,7 @@
             color:gray;
         }
     </style>
-  <script type="module" crossorigin src="./assets/search.d50bf5b6.js"></script>
+  <script type="module" crossorigin src="./assets/searchall.3e83bf94.js"></script>
   <link rel="modulepreload" href="./assets/tweet-component.088c1db2.js">
   <link rel="modulepreload" href="./assets/util.8203463a.js">
 </head>
@@ -59,33 +59,9 @@
     
 
     <div class="container">
-        <h1 id="title">(loading...)</h1>
+        <h1 id="title">Archive Wide Image Search</h1>
         <p class="subtitle"></p>
         <textarea id="search" type="text" class="search-box" placeholder="Type a query & hit enter" autofocus></textarea>
-        <div id="instructions" style="color:Gray; max-width: 400px; text-align: left;">
-            <p>
-                This will search for text similarity between what you type and all of this user's tweet threads.
-            </p>
-            <p>
-                Whatever you type, the system will find threads that are similar in meaning, tone, emotional sentiment, etc. 
-            </p>
-            <p>
-                For example, if you're looking for tweets about gender discourse:
-                <ul>
-                    <li>❌ "show me tweets about gender discourse"</li>
-                    <li>✅ "our culture has lots of problems in the relationship between men & woman, something that people often miss is..."</li>
-                </ul>
-            </p>
-            <p>
-                The best use case is when you're searching for a tweet you know exists, but you can't remember the exact wording, you can just paraphrase it and it will find it. The more detail the better.
-            </p>
-            <p>
-                You can also paste in a short essay to find tweet threads similar to it.
-            </p>
-            <p style="font-style: italic;">
-                Note: you can add <code>sortByDate</code> query param to sort results. They are sorted by similarity by default.
-            </p>
-        </div>
 
     </div>
     <div id="clusterThreads">
