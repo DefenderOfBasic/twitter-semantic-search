@@ -151,6 +151,7 @@
                         }
 
                         console.log(`${i} / ${result.matches.length}`)
+                        document.querySelector(".subtitle").innerHTML = `(${i} / ${result.matches.length}) images loaded`
                         const account_id = tweet.account_id 
                         if (!accountIdMap[account_id]) {
                             accountIdMap[account_id] = await getAccountInfo(account_id)
@@ -170,6 +171,8 @@
 
                         finalTweets.push({ tweet, score: match.score, accountInfo, imageUrl })
                     }
+
+                    document.querySelector(".subtitle").innerHTML = ''
 
                     if (sortByDate) {
                         console.log("sorting by date")
