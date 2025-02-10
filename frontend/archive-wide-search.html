@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semantic Search</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            text-align: center;
+            padding: 2rem;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 2rem;
+        }
+        .search-box {
+            padding: 0.75rem 1rem;
+            font-size: 1.1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            width: 300px;
+            max-width: 90%;
+            transition: border-color 0.2s ease;
+        }
+        .search-box:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .thread-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 5px;
+            padding: 20px;
+        }
+        #title {
+            margin-bottom:0px;
+        }
+        .subtitle {
+            margin-top:0px;
+            color:gray;
+        }
+    </style>
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="./src/tweet-component.js" type="module"></script>
+
+    <div class="container">
+        <h1 id="title">Archive Wide Image Search</h1>
+        <p class="subtitle"></p>
+        <textarea id="search" type="text" class="search-box" placeholder="Type a query & hit enter" autofocus></textarea>
+
+    </div>
+    <div id="clusterThreads">
+
+    </div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.4/pako.min.js"></script>
+    <script type="module">
+        import { Util } from './src/util.js';
+        let supabaseClient
+        init()
+
+        async function getAccountInfo(account_id) {
+            const accountResponse = await supabaseClient.schema('public').from('account').select('*').eq('account_id', account_id)
+            const { account_display_name, username } = accountResponse.data[0]
+            
+            const profileResponse = await supabaseClient.schema('public').from('profile').select('*').eq('account_id', account_id)
+            const { avatar_media_url } = profileResponse.data[0]
+
+            return { username, account_display_name, avatar_media_url }
+        }
+
+        async function init() {
+            const supabaseUrl = 'https://fabxmporizzqflnftavs.supabase.co'
+            const supabaseKey = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZhYnhtcG9yaXp6cWZsbmZ0YXZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjIyNDQ5MTIsImV4cCI6MjAzNzgyMDkxMn0.UIEJiUNkLsW28tBHmG-RQDW-I5JNlJLt62CSk9D_qG8`
+            supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey)
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const username = urlParams.get('username');
+            const sortByDate = urlParams.get('sortByDate');
+         
+            
+          const QUERY_URL = 'http://37.27.10.242:8080/search/text'
+            const util = new Util()
+            util.username = username
+            util.name = name
+            util.avatar = ''
+            // document.querySelector("#title").innerHTML = util.username
+            // document.querySelector(".subtitle").innerHTML = ''
+
+            const clusterThreads = document.querySelector("#clusterThreads")
+
+            document.querySelector('.search-box').addEventListener('keydown', async function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    clusterThreads.innerHTML = '<h3>Searching embedding space...</h3>'
+                    e.preventDefault(); // Prevents new line from being added
+                    const searchTerm = this.value
+
+                    const response = await fetch(QUERY_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({"text": searchTerm, "top_k": 5})
+                    })
+                    let result = await response.json()
+                    console.log(result)
+                    const resultArray = result.matches.map(item => { 
+                        const { tweet_id } = item.metadata
+                        return {
+                            tweet_id, score: item.distance
+                        }
+                        
+                    })
+                    console.log(resultArray)
+
+                    clusterThreads.innerHTML = `<h3>Fetching ${resultArray.length} tweets...</h3>`
+                    const supabaseResult = await supabaseClient
+                            .schema('public')
+                            .from('tweets')
+                            .select('*')
+                            .in('tweet_id', resultArray.map(item => item.tweet_id))
+                    const tweets = supabaseResult.data 
+                    const tweetIdMap = {}
+                    tweets.forEach(item => {
+                        tweetIdMap[item.tweet_id] = item
+                    })
+                    const accountIdMap = {}
+
+                    let output = ""
+                    let finalTweets = []
+
+                    for (let i = 0; i < result.matches.length; i++) {
+                        const match = resultArray[i]
+                        const tweet = tweetIdMap[match.tweet_id]
+                        if (tweet == null) {
+                            console.log("Missing tweet", match.tweet_id)
+                            continue
+                        }
+
+                        console.log(`${i} / ${result.matches.length}`)
+                        const account_id = tweet.account_id 
+                        if (!accountIdMap[account_id]) {
+                            accountIdMap[account_id] = await getAccountInfo(account_id)
+                        }
+                        // get tweet image
+                        const mediaResult = await supabaseClient
+                            .schema('public')
+                            .from('tweet_media')
+                            .select('*')
+                            .eq('tweet_id', match.tweet_id)
+                        const imageUrl = mediaResult.data[0].media_url
+                        console.log(mediaResult)
+
+                        const accountInfo = accountIdMap[account_id]
+
+                        finalTweets.push({ tweet, score: match.score, accountInfo, imageUrl })
+                    }
+
+                    if (sortByDate) {
+                        console.log("sorting by date")
+                        finalTweets = finalTweets.sort((a, b) => new Date(a.tweet.created_at) - new Date(b.tweet.created_at))
+                    }
+                    console.log(finalTweets)
+                    finalTweets.forEach(item => {
+                        output += displayTweet(item.tweet, item.score, item.accountInfo, item.imageUrl)
+                    })
+                    
+
+                    clusterThreads.innerHTML = output
+                }
+            });
+
+            function displayTweet(tweet, score, accountInfo, imageUrl) {
+                const { username, account_display_name, avatar_media_url } = accountInfo
+                let str = ""
+                str +=  `<p>similarity score: ${score}</p>`
+                const date = new Date(tweet.created_at)
+                    const url = `https://x.com/${util.username}/status/${tweet.tweet_id}`
+                    str += `<tweet-component
+                            avatar="${avatar_media_url}"
+                            name="${account_display_name}"
+                            username="${username}"
+                            timestamp="${date}"
+                            likes="${tweet.favorite_count}"
+                            retweets="${tweet.retweet_count}"
+                            url="${url}"
+                        >
+                        ${formatContent(tweet.full_text)}
+                        <img style="width:100%" src="${imageUrl}"/>
+                        </tweet-component>
+                    `
+
+                return str
+            }
+        }
+
+        function formatContent(content) {
+                let formattedContent = content.replace(/"/g, '&quot;');
+
+                // Replace single quotes with &#39;
+                formattedContent = formattedContent.replace(/'/g, '&#39;');
+
+                // Convert newlines to <br>
+                formattedContent = formattedContent.replace(/\n/g, '<br>');
+
+                // Make URLs clickable by converting them to <a> tags
+                formattedContent = formattedContent.replace(
+                    /(https?:\/\/[^\s]+)/g,
+                    '<a href="$1" target="_blank">$1</a>'
+                );
+
+        return formattedContent;
+    }
+    </script>
+</body>
+</html>
