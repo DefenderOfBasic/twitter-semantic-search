@@ -4,13 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "local-embed": "node local-embed.js",
+    "serve": "node server.js",
+    "convert-archive": "node raw-archive-to-json.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
     "openai": "^4.73.1",
+    "unzipper": "^0.12.3",
     "vectra": "^0.9.0"
   }
 }

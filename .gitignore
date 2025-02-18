@@ -6,3 +6,6 @@ dist-ssr
 archives
 .env
 .data/
+frontend/public/
+chroma.log
+chroma_data/
