@@ -2,11 +2,14 @@ import fs from 'fs'
 import path from 'path'
 import { Util } from '../frontend/src/util.js'
 import { ChromaClient } from 'chromadb'
+import { copyFile } from 'fs/promises';
+
+const usernameArgument = (process.argv[2]).toLocaleLowerCase();
 
 const client = new ChromaClient();
-const collection = await client.getOrCreateCollection({name: "tweets"});
+const collection = await client.getOrCreateCollection({name: usernameArgument });
 
-const ARCHIVE_FILEPATH = '../archives/defenderofbasic.json'
+const ARCHIVE_FILEPATH = `../archives/${usernameArgument}-combined.json`
 const archive_basename = path.basename(ARCHIVE_FILEPATH, '.json')
 
 const util = new Util()
@@ -19,7 +22,7 @@ tweets = util.sortAscending(tweets)
 // const itemsToEmbed = getAllTweetsUnfiltered()
 const itemsToEmbed = getCombinedThreads()
 
-const sliceSize = 100
+const sliceSize = 10
 
 for (let i = 0; i < itemsToEmbed.length; i+= sliceSize) {
     console.log(`${i} / ${itemsToEmbed.length}`)
@@ -28,6 +31,7 @@ for (let i = 0; i < itemsToEmbed.length; i+= sliceSize) {
 
     // Check if it's already in there
     const result = await collection.get({ ids, include: ["documents", "embeddings"] })
+    console.log(result.documents)
     if (result.documents.length == slice.length) {
         continue
     }
@@ -37,6 +41,12 @@ for (let i = 0; i < itemsToEmbed.length; i+= sliceSize) {
         documents: slice.map(item => item.text)
       });
 }
+
+// Copy the combined archive to the frontend
+const sourcePath = `../archives/${usernameArgument}-combined.json`;
+const destPath = '../frontend/public/archive-combined.json';
+console.log(`Copying ${sourcePath} to ${destPath}`)
+await copyFile(sourcePath, destPath);
 
 function getCombinedThreads() {
     // Extracts the threads, each thread is one document

@@ -92,7 +92,7 @@
         import { Util } from './src/util.js';
         init()
         async function init() {
-            const archiveJson = await (await fetch ('./defenderofbasic.json')).json()
+            const archiveJson = await (await fetch ('./archive-combined.json')).json()
             console.log(archiveJson)
             const SERVER_URL = 'http://localhost:3005'
 
@@ -101,7 +101,6 @@
             util.name = archiveJson.account[0].account.accountDisplayName
             util.accountId = archiveJson.account[0].account.accountId
             util.avatar = archiveJson.profile[0].profile.avatarMediaUrl
-            console.log(util)
             
             document.querySelector("#title").innerHTML = util.username
             document.querySelector(".subtitle").innerHTML = 'local semantic search'

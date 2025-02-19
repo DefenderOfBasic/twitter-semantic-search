@@ -3,7 +3,8 @@ node_modules
 dist
 dist-ssr
 *.local
-archives
+archives/*
+!archives/.gitkeep
 .env
 .data/
 frontend/public/

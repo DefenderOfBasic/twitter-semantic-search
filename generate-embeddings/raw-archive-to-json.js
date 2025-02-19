@@ -6,6 +6,7 @@ import readline from 'readline'
 import zlib from 'zlib'
 import util from 'util'
 const gzip = util.promisify(zlib.gzip);
+const usernameArgument = process.argv[2];
 
 export async function processArchive(archivePath) {
     const outDirectory = path.dirname(archivePath)
@@ -33,9 +34,7 @@ export async function processArchive(archivePath) {
     await fs.promises.writeFile(accountFilePath, JSON.stringify(accountData, null, 2), 'utf8');
 
     // Combine it all into one json
-    combineJsonFilesSync(`${outDirectory}/data/`, `${outDirectory}/archive-combined.json`)
-    // Copy to frontend public directory
-    fs.copyFileSync(`${outDirectory}/archive-combined.json`, `../frontend/public/archive-combined.json`);
+    combineJsonFilesSync(`${outDirectory}/data/`, `${outDirectory}/${usernameArgument.toLocaleLowerCase()}-combined.json`);
 }   
 
 export async function moveFilesRecursively(sourceDir, targetDir) {
@@ -153,7 +152,8 @@ function combineJsonFilesSync(directory, outputFile) {
 
 run()
 async function run() {
-    const archivePath = '../archives/archive.zip'
+
+    const archivePath = `../archives/${usernameArgument}.zip`
     await processArchive(archivePath)
     await fs.promises.rm(`../archives/data/`, { recursive: true, force: true });
 }

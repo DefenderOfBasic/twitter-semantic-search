@@ -1,18 +1,42 @@
 # Twitter Semantic Search
 
-Basic semantic search for a tweet archive. Part of the [Community Archive](https://www.community-archive.org/) ecosystem. Generates semantic embeddings with OpenAI for each tweet thread (replies & retweets are ignored). Embeddings are inserted into CloudFlare's Vectorize DB. The frontend embeds the query with OpenAI and searches the vector DB.
+Basic semantic search for a tweet archive. Part of the [Community Archive](https://www.community-archive.org/) ecosystem.
 
-Live demo: (https://defenderofbasic.github.io/twitter-semantic-search/)
+Live demo: https://defenderofbasic.github.io/twitter-semantic-search/
 
 ## Local setup
 
-- Put archive in `archives/archive.zip`
-- in `generate-embeddings/`, run `pnpm convert-archive`, gets a single json
-- run `chroma run` && `pnpm local-embed` to embed the tweets (will do threads by default)
-- Start the server `pnpm server`
-- Serve the frontend `pnpm dev`
+1. Put your twitter archive in `archives/YOUR_USERNAME.zip`
+2. Install [Chroma](https://www.trychroma.com/) for vector embedding & storage, should just be `pip install chroma`
+3. Run the setup script with your username (will run a chroma server and generate the local embeddings)
 
-http://localhost:3000/search-local.html
+```
+./local-setup-zip.sh YOUR_USERNAME
+```
+
+4. Run the frontend
+
+```
+cd frontend/
+pnpm install
+pnpm dev
+```
+
+Open http://localhost:3000/search-local.html
+
+To run the local embedding & search on an archive JSON downloaded from the community archive, instead of a raw zip file, you can do the steps that the `local-setup-zip.sh` performs but manually:
+
+1. Run the Chroma server `chroma run`
+2. Put the JSON in `archives/USERNAME-combined.json`
+3. Run the embedding script
+
+```
+cd generate-embeddings
+pnpm install
+pnpm local-embed USERNAME
+```
+
+Then run the frontend with `pnpm dev` in `frontend/`.
 
 ## Self host this for your own tweet archive
 

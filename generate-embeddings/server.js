@@ -1,8 +1,14 @@
 import express from 'express';
 import cors from 'cors';
 import { ChromaClient } from 'chromadb'
+import fs from 'fs'
+
+const ARCHIVE_FILEPATH = `../frontend/public/archive-combined.json`
+const archiveJSON = JSON.parse(fs.readFileSync(ARCHIVE_FILEPATH).toString())
+const username = (archiveJSON.account[0].account.username).toLowerCase()
+
 const client = new ChromaClient();
-const collection = await client.getOrCreateCollection({name: "tweets"});
+const collection = await client.getOrCreateCollection({name: username });
 
 const count = await collection.count()
 
@@ -35,6 +41,6 @@ app.post('/query', async (req, res) => {
 
 // Start server
 app.listen(port, () => {
-    console.log(`Found ${count} embedded items in Chroma`)
+    console.log(`Found ${count} embedded items in Chroma for ${username}`)
     console.log(`Server running at http://localhost:${port}`);
 });

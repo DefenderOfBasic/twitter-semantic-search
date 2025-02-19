@@ -2,7 +2,7 @@
   "name": "web-boilerplate-vite",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite & (cd ../generate-embeddings && node server.js)",
     "build": "vite build",
     "preview": "vite preview"
   },
