@@ -2,12 +2,14 @@
   "name": "generate-embeddings",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "local-embed": "node local-embed.js",
     "serve": "node server.js",
-    "convert-archive": "node raw-archive-to-json.js"
+    "convert-archive": "node raw-archive-to-json.js",
+    "convert-flat-export": "node flat-tweets-to-archive-json.js"
   },
   "keywords": [],
   "author": "",

@@ -38,7 +38,16 @@ pnpm local-embed USERNAME
 
 Then run the frontend with `pnpm dev` in `frontend/`.
 
+If your source is a flat tweet JSON export, such as an export created by [TweetClaw](https://github.com/Xquik-dev/tweetclaw) or another X/Twitter collector, normalize it to the Community Archive combined JSON shape first:
+
+```
+cd generate-embeddings
+pnpm convert-flat-export ../archives/my-flat-export.json USERNAME ../archives/USERNAME-combined.json
+pnpm local-embed USERNAME
+```
+
+The converter accepts a JSON array or an object with `tweets`, `data`, `results`, or `items`. It maps common tweet fields such as `id`, `tweetId`, `text`, `full_text`, `createdAt`, `favoriteCount`, and `retweetCount`. It does not fetch tweets or post anything, so use it only with export data you have permission to archive.
+
 ## Self host this for your own tweet archive
 
-The general steps are, create & deploy the CloudFlare worker + vector DB (see instructions in `cloudflare-worker/` directory). Then generate embeddings (run the script in `generate-embeddings/` with your archive JSON in `archives/`). Finally run the `frontend/` and replace the [cloudflare URL](https://github.com/DefenderOfBasic/twitter-semantic-search/blob/main/frontend/index.html#L71-L73) with your own, and a URL where the archive JSON is hosted. 
-
+The general steps are, create & deploy the CloudFlare worker + vector DB (see instructions in `cloudflare-worker/` directory). Then generate embeddings (run the script in `generate-embeddings/` with your archive JSON in `archives/`). Finally run the `frontend/` and replace the [cloudflare URL](https://github.com/DefenderOfBasic/twitter-semantic-search/blob/main/frontend/index.html#L71-L73) with your own, and a URL where the archive JSON is hosted.
